@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.log
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+*-desktop.png
+*-mobile.png
+data/camels-ind/*.zip
+data/camels-ind/extracted/
+.aws-sam/
