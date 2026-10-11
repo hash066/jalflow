@@ -1,0 +1,30 @@
+{
+  "source": "CAMELS-IND v1.0 observed streamflow and catchment-mean precipitation, Mandleshwar 12035",
+  "split": "chronological 125/55 days",
+  "model": "two-parameter rainfall-memory screening model",
+  "parameters": {
+    "score": 0.230709025457132,
+    "a": 10,
+    "b": 0.95
+  },
+  "holdout": {
+    "model": {
+      "nse": -5.218,
+      "kge": -0.788,
+      "volumeBiasPercent": -86.19
+    },
+    "persistence": {
+      "nse": -3.474,
+      "kge": -0.582,
+      "volumeBiasPercent": -71.01
+    },
+    "seasonal": {
+      "nse": -84.563,
+      "kge": -6.869,
+      "volumeBiasPercent": 29.59
+    }
+  },
+  "forecastEnabled": false,
+  "runtimeMs": 93.3,
+  "decision": "Forecasting is excluded from the product unless the model beats both baselines on held-out NSE."
+}

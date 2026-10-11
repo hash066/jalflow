@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+const root=new URL('../',import.meta.url);
+const read=(p)=>fs.readFileSync(new URL(p,root),'utf8').trim().split(/\r?\n/).map(r=>r.split(','));
+const names=read('data/camels-ind/extracted/attributes_csv/camels_ind_name.csv');
+const nh=names.shift();const no=Object.fromEntries(nh.map((x,i)=>[x,i]));
+names.sort((a,b)=>Number(b[no.flow_availability])-Number(a[no.flow_availability])||Number(a[no.gauge_id])-Number(b[no.gauge_id]));
+const best=names[0],id=best[no.gauge_id];
+const topo=read('data/camels-ind/extracted/attributes_csv/camels_ind_topo.csv');const th=topo.shift();const to=Object.fromEntries(th.map((x,i)=>[x,i]));const t=topo.find(r=>r[to.gauge_id]===id);
+const forcing=read(`data/camels-ind/extracted/catchment_mean_forcings/${id}.csv`);const fh=forcing.shift();const fo=Object.fromEntries(fh.map((x,i)=>[x,i]));
+const rain=new Map(forcing.map(r=>[[r[0],r[1],r[2]].join('-'),Number(r[fo['prcp(mm/day)']])]));
+const flows=read('data/camels-ind/extracted/streamflow_timeseries/streamflow_observed.csv');const sh=flows.shift();const col=sh.indexOf(id);
+const paired=flows.map(r=>({date:`${r[0]}-${r[1].padStart(2,'0')}-${r[2].padStart(2,'0')}`,key:[r[0],r[1],r[2]].join('-'),rainMm:rain.get([r[0],r[1],r[2]].join('-')),flowCms:Number(r[col])})).filter(r=>Number.isFinite(r.rainMm)&&Number.isFinite(r.flowCms));
+let end=paired.length-1,start=Math.max(0,end-179);for(let i=paired.length-180;i>=0;i--){const chunk=paired.slice(i,i+180);if(chunk.length===180&&chunk.every((r,j)=>j===0||new Date(r.date)-new Date(chunk[j-1].date)===86400000)){start=i;end=i+179;break}}
+const sample=paired.slice(start,end+1).map(r=>({...r,flowM3:Math.round(r.flowCms*86400)}));
+const catchment={id,name:best[no.cwc_site_name],basin:best[no.river_basin],lat:Number(t[to.cwc_lat]),lon:Number(t[to.cwc_lon]),areaKm2:Number(t[to.cwc_area]),source:'CAMELS-IND v1.0, Zenodo record 14999580',period:`${sample[0].date} to ${sample.at(-1).date}`,flowAvailability:Number(best[no.flow_availability])};
+const ts=`import type{Day}from'./model';\nexport const catchment=${JSON.stringify(catchment)} as const;\nexport const observed:Day[]=${JSON.stringify(sample.map(({date,rainMm,flowM3})=>({date,rainMm,flowM3})))};\n`;
+fs.writeFileSync(new URL('src/sample.ts',root),ts);
+fs.writeFileSync(new URL('data/camels-ind/selection.json',root),JSON.stringify({method:'Maximum complete overlapping observed rainfall/runoff availability; precipitation was complete across the shared forcing period; ties broken by numeric catchment ID.',catchment,pairedDays:paired.length,sampleDays:sample.length},null,2));
+fs.writeFileSync(new URL('data/camels-ind/mandleshwar-sample.csv',root),['date,rain_mm,observed_flow_cms,observed_flow_m3_day',...sample.map(r=>`${r.date},${r.rainMm},${r.flowCms},${r.flowM3}`)].join('\n'));
+console.log({catchment,pairedDays:paired.length,sampleDays:sample.length});

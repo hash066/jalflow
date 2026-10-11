@@ -1,0 +1,16 @@
+{
+  "method": "Maximum complete overlapping observed rainfall/runoff availability; precipitation was complete across the shared forcing period; ties broken by numeric catchment ID.",
+  "catchment": {
+    "id": "12035",
+    "name": "Mandleshwar",
+    "basin": "Narmada",
+    "lat": 22.1683,
+    "lon": 75.6608,
+    "areaKm2": 72809,
+    "source": "CAMELS-IND v1.0, Zenodo record 14999580",
+    "period": "2020-07-05 to 2020-12-31",
+    "flowAvailability": 96.13
+  },
+  "pairedDays": 14976,
+  "sampleDays": 180
+}
