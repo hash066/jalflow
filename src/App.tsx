@@ -72,6 +72,8 @@ export default function App() {
     setOps((v) =>
       v.map((x) => (x.id === id ? { ...x, enabled: !x.enabled } : x)),
     );
+  const updateOpportunity = (id: string, field: "capacityM3" | "transferM3" | "costLakh", value: number) =>
+    setOps((items) => items.map((item) => item.id === id ? { ...item, [field]: Math.max(0, value) } : item));
   const download = () => {
     const csv = [
       "date,rain_mm,observed_flow_m3,planned_storage_m3,overflow_m3,unmet_m3",
@@ -155,20 +157,17 @@ export default function App() {
             OPPORTUNITIES
           </div>
           {ops.map((o) => (
-            <button
-              key={o.id}
-              className={"opportunity " + (o.enabled ? "enabled" : "")}
-              onClick={() => toggle(o.id)}
-            >
-              <span className="check">{o.enabled && <Check />}</span>
-              <span>
-                <b>{o.name}</b>
-                <small>
-                  {o.type} / {fmt(o.capacityM3)} m3
-                </small>
-              </span>
-              <output>Rs {o.costLakh}L</output>
-            </button>
+            <div key={o.id} className={"opportunity " + (o.enabled ? "enabled" : "")}>
+              <button className="op-toggle" onClick={() => toggle(o.id)} aria-pressed={o.enabled}>
+                <span className="check">{o.enabled && <Check />}</span>
+                <span><b>{o.name}</b><small>{o.type}</small></span>
+              </button>
+              <div className="op-fields">
+                <label>Capacity m3<input aria-label={`${o.name} capacity`} type="number" min="0" step="100000" value={o.capacityM3} onChange={(event) => updateOpportunity(o.id, "capacityM3", +event.target.value)} /></label>
+                <label>Transfer/day<input aria-label={`${o.name} daily transfer`} type="number" min="0" step="100000" value={o.transferM3} onChange={(event) => updateOpportunity(o.id, "transferM3", +event.target.value)} /></label>
+                <label>Cost lakh<input aria-label={`${o.name} cost`} type="number" min="0" step="0.1" value={o.costLakh} onChange={(event) => updateOpportunity(o.id, "costLakh", +event.target.value)} /></label>
+              </div>
+            </div>
           ))}
           <div className="cost">
             <IndianRupee />
@@ -176,6 +175,10 @@ export default function App() {
               <small>SELECTED PORTFOLIO</small>
               <strong>{plan.costLakh.toFixed(1)} lakh</strong>
             </span>
+          </div>
+          <div className="optimizer-note">
+            <Check />
+            <span><b>EXACT PORTFOLIO SEARCH</b><small>{plan.evaluatedPortfolios} feasible combinations evaluated; unmet demand, overflow, then cost.</small></span>
           </div>
         </aside>
         <section className="map-panel">
@@ -288,6 +291,10 @@ export default function App() {
             </button>
           </div>
           <h2>Storage performance</h2>
+          <div className="forecast-gate">
+            <AlertTriangle />
+            <span><b>FORECASTING GATED OFF</b><small>Held-out model NSE -1.871 vs persistence 0.031. This view replays observations only.</small></span>
+          </div>
           <div className="kpis">
             <div>
               <small>OVERFLOW AVOIDED</small>
@@ -345,15 +352,15 @@ export default function App() {
             </ResponsiveContainer>
           </div>
           <div
-            className={"balance " + (plan.balanceError < 0.01 ? "ok" : "bad")}
+            className={"balance " + (plan.validation.valid ? "ok" : "bad")}
           >
-            {plan.balanceError < 0.01 ? <Check /> : <AlertTriangle />}
+            {plan.validation.valid ? <Check /> : <AlertTriangle />}
             <span>
               <b>
-                WATER BALANCE {plan.balanceError < 0.01 ? "VALID" : "CHECK"}
+                WATER BALANCE {plan.validation.valid ? "VALID" : "CHECK"}
               </b>
               <small>
-                Residual {plan.balanceError.toFixed(4)} m3 across the replay
+                Period {plan.balanceError.toFixed(4)} m3 / max daily {plan.maxDailyBalanceError.toFixed(4)} m3
               </small>
             </span>
           </div>

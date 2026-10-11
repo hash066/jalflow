@@ -1,8 +1,9 @@
 # Three-minute demo
 
 1. Show Mandleshwar provenance and the observed replay.
-2. Change daily demand and the capital budget.
-3. Toggle storage/recharge opportunities and compare overflow and unmet demand.
-4. Scrub the linked rainfall, river and storage views.
-5. Export the scenario CSV and show the zero-residual water-balance check.
-6. Close on benchmark gating and the explicit hypothetical-infrastructure limitations.
+2. Show the forecast gate: the held-out model loses to persistence, so forecasting is absent.
+3. Change demand, budget, and an intervention's capacity and transfer assumptions.
+4. Toggle opportunities and show exact portfolio selection update.
+5. Scrub the linked rainfall, river and storage views.
+6. Export the CSV and show daily plus period water-balance checks.
+7. Close on provenance and hypothetical-infrastructure limitations.

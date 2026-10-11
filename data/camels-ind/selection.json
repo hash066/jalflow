@@ -1,5 +1,5 @@
 {
-  "method": "Maximum complete overlapping observed rainfall/runoff availability; precipitation was complete across the shared forcing period; ties broken by numeric catchment ID.",
+  "method": "Highest published observed-flow availability with complete precipitation overlap; ties broken by numeric catchment ID. Blank flow cells are excluded, never coerced to zero.",
   "catchment": {
     "id": "12035",
     "name": "Mandleshwar",
@@ -8,9 +8,11 @@
     "lon": 75.6608,
     "areaKm2": 72809,
     "source": "CAMELS-IND v1.0, Zenodo record 14999580",
-    "period": "2020-07-05 to 2020-12-31",
+    "period": "2017-02-04 to 2018-02-03",
     "flowAvailability": 96.13
   },
-  "pairedDays": 14976,
-  "sampleDays": 180
+  "pairedObservedDays": 14397,
+  "longestCompleteRunDays": 13914,
+  "replayDays": 365,
+  "sourceArchiveSha256": "4f2794bbef42bcd6707afb45e1e0ae8f21f4a2a17bf8c82006dce4273c82c664"
 }

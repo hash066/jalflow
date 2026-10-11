@@ -173,12 +173,7 @@ nav .active {
   border: 1px solid #d7dcd9;
   border-bottom: 0;
   background: #fff;
-  padding: 10px 8px;
-  display: grid;
-  grid-template-columns: 22px 1fr auto;
-  gap: 7px;
-  text-align: left;
-  align-items: center;
+  padding: 8px;
 }
 .opportunity:last-of-type {
   border-bottom: 1px solid #d7dcd9;
@@ -202,7 +197,18 @@ nav .active {
 .check svg {
   width: 12px;
 }
-.opportunity > span:nth-child(2) {
+.op-toggle {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 7px;
+  padding: 0;
+  text-align: left;
+  align-items: center;
+}
+.op-toggle > span:nth-child(2) {
   display: grid;
 }
 .opportunity b {
@@ -212,8 +218,23 @@ nav .active {
   font-size: 7px;
   color: #75807b;
 }
-.opportunity output {
-  font: 8px DM Mono;
+.op-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.75fr;
+  gap: 5px;
+  margin-top: 8px;
+}
+.op-fields label {
+  color: #68736e;
+  font: 6px DM Mono;
+}
+.op-fields input {
+  width: 100%;
+  margin-top: 3px;
+  border: 1px solid #cbd2ce;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+  font: 7px DM Mono;
 }
 .cost {
   margin-top: 16px;
@@ -237,6 +258,38 @@ nav .active {
 .cost strong {
   font: 16px DM Mono;
   color: #edba64;
+}
+.optimizer-note,
+.forecast-gate {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  margin-top: 9px;
+  background: #e3f0e9;
+  color: #245f4d;
+}
+.optimizer-note svg,
+.forecast-gate svg {
+  width: 15px;
+  flex: none;
+}
+.optimizer-note span,
+.forecast-gate span {
+  display: grid;
+}
+.optimizer-note b,
+.forecast-gate b {
+  font: 7px DM Mono;
+}
+.optimizer-note small,
+.forecast-gate small {
+  font-size: 7px;
+  line-height: 1.4;
+}
+.forecast-gate {
+  margin: -6px 0 10px;
+  background: #f3e7d6;
+  color: #76562b;
 }
 .map-panel {
   display: grid;
